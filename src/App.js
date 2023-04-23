@@ -20,7 +20,7 @@ function App() {
 
   const fetchOwners = async () => {
     try {
-      const response = await axios.get('/api/petowners');
+      const response = await axios.get('/.netlify/functions/listPetOwners');
       setOwners(response.data);
     } catch (error) {
       console.error('Error fetching pet owners', error);
@@ -29,7 +29,7 @@ function App() {
 
   const handleCreateOwner = async () => {
     try {
-      const response = await axios.post('/api/petowners', {
+      const response = await axios.post('/.netlify/functions/createPetOwner', {
         name: ownerName,
         email: ownerEmail,
       });
@@ -48,7 +48,7 @@ function App() {
       return;
     }
     try {
-      const response = await axios.post(`/api/petowners/${selectedOwner}/pets`, {
+      const response = await axios.post(`/.netlify/functions/addPet/${selectedOwner}`, {
         name: petName,
         breed: petBreed,
         age: petAge,
