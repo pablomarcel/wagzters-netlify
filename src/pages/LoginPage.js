@@ -1,6 +1,5 @@
 import React from 'react';
 import LoginForm from '../components/LoginForm';
-import Create from './Create';
 
 
 const LoginPage = () => {
