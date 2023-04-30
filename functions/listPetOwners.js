@@ -1,8 +1,9 @@
+require('dotenv').config();
 const neo4j = require('neo4j-driver');
 
 const driver = neo4j.driver(
-    'neo4j+s://dd3f90d1.databases.neo4j.io',
-    neo4j.auth.basic('neo4j', 'OWQoga9pbF-YcT1vGV27hxKGqJNqnhAtlPm2hst_uqQ')
+    process.env.NEO4J_URI,
+    neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
 exports.handler = async (event, context) => {
