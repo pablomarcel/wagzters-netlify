@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 const Create = () => {
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
@@ -130,4 +131,6 @@ const Create = () => {
 
 };
 
-export default Create;
+export default withAuthenticationRequired(Create, {
+    onRedirecting: () => <div>Loading...</div>,
+});
