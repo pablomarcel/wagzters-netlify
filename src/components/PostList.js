@@ -1,28 +1,20 @@
+//wagzters/src/components/PostList.js:
+
 import React, { useState, useEffect } from 'react';
 import Post from './Post';
 
-const PostList = () => {
+const PostList = ({ email }) => {
     const [posts, setPosts] = useState([]);
 
-    // Fetch posts data from API or static data for now
     useEffect(() => {
-        // Replace with your API call later
         const fetchPosts = async () => {
-            const data = [
-                {
-                    id: 1,
-                    petName: 'Buddy',
-                    ownerName: 'John',
-                    content: 'Playing fetch in the park is my favorite!',
-                    imageURL: 'https://i.imgur.com/KieXhJW.png',
-                },
-                // More posts...
-            ];
+            const response = await fetch(`/.netlify/functions/getPosts?email=${email}`);
+            const data = await response.json();
             setPosts(data);
         };
 
         fetchPosts();
-    }, []);
+    }, [email]);
 
     return (
         <div className="post-list">
@@ -34,3 +26,4 @@ const PostList = () => {
 };
 
 export default PostList;
+

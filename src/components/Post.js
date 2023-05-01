@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+//wagzters/src/components/Post.js:
+
 import React from 'react';
 
 const Post = ({ post }) => {

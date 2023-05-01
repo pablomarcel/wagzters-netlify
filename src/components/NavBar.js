@@ -1,4 +1,8 @@
 /* eslint-disable no-unused-vars */
+
+//wagzters/src/components/NavBar.js:
+
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -21,9 +25,6 @@ const NavBar = () => {
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/login">Login</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/register">Register</Link>
                                 </li>
                             </>
                         ) : (

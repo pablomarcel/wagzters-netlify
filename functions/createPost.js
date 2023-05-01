@@ -1,4 +1,4 @@
-//wagzters/functions/createPetOwner.js:
+// wagzters/functions/createPost.js
 
 require('dotenv').config();
 const neo4j = require('neo4j-driver');
@@ -20,33 +20,32 @@ exports.handler = async (event, context) => {
         return { statusCode: 401, body: 'Unauthorized' };
     }
 
-    const userEmail = user.email;
     const body = JSON.parse(event.body);
-    const { name } = body;
+    const { petId, content, imageURL, ownerEmail } = body;
 
     const session = driver.session();
     try {
         const result = await session.writeTransaction(async (tx) => {
-            const findUserQuery = `
-                MERGE (user:User {email: $email})
-                ON CREATE SET user.id = $userId, user.name = $name
+            const query = `
+                MATCH (pet:Pet {id: $petId})
+                MATCH (owner:PetOwner {email: $ownerEmail})
+                CREATE (post:Post {id: $id, content: $content, imageURL: $imageURL, createdAt: datetime()})
+                CREATE (post)-[:POST_ABOUT]->(pet)
+                CREATE (owner)-[:OWNER_OF_POST]->(post)
+                RETURN post
             `;
-            await tx.run(findUserQuery, { email: userEmail, userId: uuidv4(), name });
-
-            const createPetOwnerQuery = `
-                MATCH (user:User {email: $email})
-                CREATE (owner:PetOwner {id: $ownerId, name: $name, email: $email})-[:MANAGES]->(user)
-                RETURN owner
-            `;
-            const response = await tx.run(createPetOwnerQuery, { email: userEmail, ownerId: uuidv4(), name });
-            return response.records[0].get('owner').properties;
+            const params = { id: uuidv4(), petId, content, imageURL, ownerEmail };
+            const response = await tx.run(query, params);
+            return response.records[0].get('post').properties;
         });
 
         return { statusCode: 201, body: JSON.stringify(result) };
     } catch (error) {
-        return { statusCode: 500, body: JSON.stringify({ error: 'An error occurred while creating the pet owner.' }) };
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'An error occurred while creating the post.', details: error.message }),
+        };
     } finally {
         await session.close();
     }
 };
-
